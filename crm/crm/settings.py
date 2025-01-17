@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_roles',
+    'django_filters',
+    'apps.organisation',
+    'apps.courses',
+    'apps.arrangements',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +75,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'crm.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_roles.permissions.RolesPermission',
+    ],
+}
+
+REST_FRAMEWORK_ROLES = {
+  'ROLES': 'apps.organisation.roles.ROLES',
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -100,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "organisation.CustomUser"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
