@@ -34,6 +34,7 @@ class TeacherView(viewsets.ModelViewSet):
 
 
 class CourseView(viewsets.ModelViewSet):
+    lookup_field = 'slug'
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     view_permissions = {

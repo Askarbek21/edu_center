@@ -13,7 +13,6 @@ class Student(models.Model):
     has_paid = models.BooleanField(default=False, verbose_name='Оплатил')
     parents_phone_number = models.CharField(max_length=13, verbose_name='Телефон номер родителей', blank=True)
     joined_date = models.DateField(default=datetime.date.today, verbose_name='Дата присоединение')
-    password = models.CharField(max_length=64, blank=True, verbose_name='Пароль')
     status = models.ForeignKey('Status', on_delete=models.SET_NULL, null=True, verbose_name='Статус')
     branch = models.ForeignKey(
         Branch, on_delete=models.CASCADE, 
@@ -37,7 +36,6 @@ class Teacher(models.Model):
     name = models.CharField(max_length=128, verbose_name='ФИО')
     phone_number = models.CharField(max_length=13, verbose_name='Номер телефона')
     img = models.ImageField(upload_to='teachers_img/', verbose_name='Фото учителя', null=True)
-    password = models.CharField(max_length=64, verbose_name='Пароль')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс', null=True)
     branch = models.ForeignKey(
         Branch, on_delete=models.CASCADE,
@@ -76,10 +74,10 @@ class Course(models.Model):
     def __str__(self):
         return self.name
     
-    def save(self):
+    def save(self, *args,**kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
-        return super().save()
+        return super().save(*args,**kwargs)
     
 
 class Status(models.Model):
