@@ -2,8 +2,8 @@ import datetime
 from django.db import models
 from django.utils.text import slugify
 
-from apps.organisation.models import Branch, CustomUser
-
+from apps.branches.models import Branch
+from apps.users.models import CustomUser
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser,on_delete=models.CASCADE ,null=True, related_name='student_profile')

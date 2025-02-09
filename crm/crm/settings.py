@@ -30,7 +30,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+SHARED_APPS = [
+    'django_tenants',
+    'apps.organisation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,12 +42,21 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_roles',
     'django_filters',
-    'apps.organisation',
-    'apps.courses',
-    'apps.arrangements',
 ]
 
+TENANT_APPS = [
+    'apps.courses',
+    'apps.arrangements',
+    'apps.branches',
+    'apps.users',
+    'apps.tariff',
+    'apps.license'
+]
+
+INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,7 +94,7 @@ REST_FRAMEWORK = {
 }
 
 REST_FRAMEWORK_ROLES = {
-  'ROLES': 'apps.organisation.roles.ROLES',
+  'ROLES': 'apps.branches.roles.ROLES',
 }
 
 # Database
@@ -91,11 +102,14 @@ REST_FRAMEWORK_ROLES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'askar150404',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -115,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "organisation.CustomUser"
+AUTH_USER_MODEL = "users.CustomUser"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -127,7 +141,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+#Tenants
 
+TENANT_MODEL = 'organisation.Organisation'
+
+TENANT_DOMAIN_MODEL = 'organisation.Domain'
+
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 from django.utils.text import slugify
 
-from apps.organisation.models import Branch
+from apps.branches.models import Branch
 from apps.courses.models import Teacher, Student, Course
 
 
